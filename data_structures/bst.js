@@ -1,3 +1,5 @@
+/*jshint esversion: 6 */
+
 class Node {
   constructor(data) {
     this.data = data;
@@ -290,83 +292,104 @@ class LinkedList {
 }
 
 class BinarySearchTree {
-  constructor() {
-    this.head = null;
-    this.marked = false;
-  }
-
-  createNode(input) {
-    return {
-      left: null,
-      right: null,
-      data: input,
-      marked: false,
-    };
-  }
-
-  add(input) {
-    if (!this.head) {
-      this.head = this.createNode(input);
-    } else {
-      this.insert(this.head, input);
+    
+    constructor() {
+        this.head = null;
+        this.marked = false;
     }
-    return this;
-  }
 
-
-  insert(node, input) {
-    if (node.data > input) {
-      if (node.left === null) {
-        node.left = this.createNode(input);
-      } else {
-        this.insert(node.left, input);
-      }
-    } else {
-      if (node.right === null) {
-        node.right = this.createNode(input);
-      } else {
-        this.insert(node.right, input);
-      }
+    createNode(input) {
+        
+        return {
+            left: null,
+            right: null,
+            data: input,
+            marked: false,
+        };
     }
-    return this;
-  }
 
-  dfs(node = this.head, target = 0) {
-    if (node) {
-      if (node.data === target) {
-        return node;
-      } 
-      return this.dfs(node.left, target) || this.dfs(node.right, target);
-    }
-    return false;
-  }
-
-
-  bfs(node = this.head, target = 0) {
-    let queue = [];
-    node.marked = true;
-    queue.unshift(node);
-
-    while(queue.length > 0) {
-      let temp = queue.pop();
-      if (temp.data === target) {
-        return temp;
-      }
-      if (temp.left) {
-        if (!temp.left.marked) {
-          temp.left.marked = true;
-          queue.unshift(temp.left);
+    add(input) {
+        if (!this.head) {
+            this.head = this.createNode(input);
+        } 
+        else {
+            this.insert(this.head, input);
         }
-      }
-      if (temp.right) {
-        if (!temp.right.marked) {
-          temp.right.marked = true;
-          queue.unshift(temp.right);
-        }
-      }
+        return this;
     }
-    return "No such node.";
-  }
+
+
+    insert(node, input) {
+        if (node.data > input) {
+            if (node.left === null) {
+                node.left = this.createNode(input);
+            } 
+            else {
+                this.insert(node.left, input);
+            }
+        } 
+        else {
+            if (node.right === null) {
+                node.right = this.createNode(input);
+            }
+            else {
+                this.insert(node.right, input);
+            }
+        }
+        return this;
+    }
+
+    validateTree(node = this.head) {
+        if (node) {
+            if (node.left && node.left.data > node.data) {
+                return false;
+            }
+            if (node.right && node.right.data < node.data) {
+                return false;
+            }
+            return this.validateTree(node.left) && this.validateTree(node.right);
+        }
+        return true;
+    }
+
+    dfs(node = this.head, target = 0) {
+        if (node) {
+            if (node.data === target) {
+                return node;
+            } 
+            return this.dfs(node.left, target) || this.dfs(node.right, target);
+        }
+        return false;
+    }
+
+
+    bfs(node = this.head, target = 0) {
+        let queue = [];
+        node.marked = true;
+        queue.unshift(node);
+
+        while(queue.length > 0) {
+
+            let temp = queue.pop();
+            if (temp.data === target) {
+                return temp;
+            }
+            if (temp.left) {
+                if (!temp.left.marked) {
+                    temp.left.marked = true;
+                    queue.unshift(temp.left);
+                }
+            }
+            if (temp.right) {
+                if (!temp.right.marked) {
+                    temp.right.marked = true;
+                    queue.unshift(temp.right);
+                }
+            }
+        }
+
+        return "No such node.";
+    }
 
 
   preOrder(node = this.head) {
@@ -396,7 +419,7 @@ class BinarySearchTree {
   postOrder(node = this.head) {
 
     if (node.left){
-      this.postOrder(node.left)
+      this.postOrder(node.left);
     }
     if (node.right) {
       this.postOrder(node.right);
@@ -442,7 +465,32 @@ class BinarySearchTree {
     }
 
     printAllPaths(root = this.head, paths = []) {
+        
         // Use DFS, means me need the !root base case. 
+        if (!root) {
+            return;
+        }
+
+        paths.push(root.data);
+    
+        /* Check if we are at a terminal node, we don't want to keep recursing and use if(!root)
+        becuase we will pop twice if we do that */
+        if (!root.left && !root.right) {
+            console.log(paths.join("-"));
+            paths.pop();
+            return null;
+        }
+
+        this.printAllPaths(root.left, paths);
+        this.printAllPaths(root.right, paths);
+        
+        // Pop once more once both paths have finished because it means we are in an intermediary step
+        paths.pop();
+        return null;
+    }
+
+    printLongestPath(root = this.head, paths = [], finishedPaths = []) {
+         
         if (!root) {
             return;
         }
@@ -451,15 +499,34 @@ class BinarySearchTree {
     
         // Check if we are at a terminal node, we don't want to keep recursing and use if(!root) becuase we will pop twice if we do that
         if (!root.left && !root.right) {
-            console.log(paths.join("-"))
+            //finishedPaths = finishedPaths.concat(paths)
+            finishedPaths.push(paths.join("-"));
             paths.pop();
             return null;
+
+            /* Explanation: how does finishedPaths propogate back to the previous 
+               level after returning null? In JS, objects are passed by value.. sort of. 
+               Arrays are objects. Pushing mutates the array. You are operating over the reference
+               to finishedPaths itself, altering what is located at its address in memory. So you 
+               don't need to pass it back with a return statement to maintain the changes. However, 
+               you cannot assign a new value to an object, that will not be maintained, so the 
+               commented out code about concat won't work, and since concat doesn't mutate, you're SOL. */
         }
-        this.printAllPaths(root.left, paths);
-        this.printAllPaths(root.right, paths);
+
+        this.printLongestPath(root.left, paths, finishedPaths);
+        this.printLongestPath(root.right, paths, finishedPaths);
+        
         // Pop once more once both paths have finished because it means we are in an intermediary step
+        
         paths.pop();
-        return null;
+        
+        let lengths = finishedPaths.map(el =>{return el.split("-").length});
+        let longest = finishedPaths[lengths.indexOf(Math.max.apply(null, lengths))];
+        
+        return longest;
+
+        /* could do finishedPaths.sort((a,b) => { return a.length <= b.length})[0]; 
+           but sorting is an O(n log n) operation! mapping, indexOf, and _max all run seperately on O(n) time */
     }
 
     hasPathSum(root, sum) {
