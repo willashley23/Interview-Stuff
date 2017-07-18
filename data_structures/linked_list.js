@@ -1,3 +1,5 @@
+/*jshint esversion: 6 */
+
 export default class Node {
   constructor(data) {
     this.data = data;
@@ -12,7 +14,7 @@ export default class LinkedList {
   }
 
   add(value) {
-    let node = new Node(value)
+    let node = new Node(value);
     let currentNode = this.head;
 
     if (!currentNode) {

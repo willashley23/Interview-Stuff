@@ -443,8 +443,8 @@ class BinarySearchTree {
         }
 
         list.add(root.data);
-        flattenToLinkedList(root.left, lists, level + 1);
-        flattenToLinkedList(root.right, lists, level + 1);
+        flattenToLinkedList(root.left, listsArray, level + 1);
+        flattenToLinkedList(root.right, listsArray, level + 1);
 
     }
 

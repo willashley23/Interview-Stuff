@@ -29,7 +29,7 @@ function bsearch(array, target, left, right) {
   if (array[middle] === target) {
     return middle;
   } else if (array[middle] > target) {
-    return bsearch(array, target, left, middle - 1)
+    return bsearch(array, target, left, middle - 1);
   } else {
     return bsearch(array, target, middle + 1, right);
   }
