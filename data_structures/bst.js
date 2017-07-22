@@ -340,6 +340,26 @@ class BinarySearchTree {
         return this;
     }
 
+    getHeight(root) {
+        if (root === null) { // Base case
+            return 0; 
+        }
+        return Math.max(this.getHeight(root.left), this.getHeight(root.right)) + 1;
+    }
+
+    isBalanced(root = this.head) {
+        if (root === null) { // Base case
+          return true;
+        }
+        var heightDifference = Math.abs(this.getHeight(root.left) - this.getHeight(root.right));
+        if (heightDifference > 1) {
+          return false;
+        } else {
+          return this.isBalanced(root.left) && this.isBalanced(root.right);
+        }
+    }
+
+
     validateTree(node = this.head) {
         if (node) {
             if (node.left && node.left.data > node.data) {
