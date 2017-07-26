@@ -55,7 +55,7 @@ const flatten = function(arr, result = []) {
     Succinct, but very slow! O(N*K)!!! (Because indexOf is O(n) it must walk through the array)
         arr = arr1.filter(x => arr2.indexOf(x) == -1);
  
-    Much better! Use a hash and filter from that since keying into hash is constant. Runs in O(n) time.
+    Much better! Use a hash and filter from that since keying into hash is constant. Runs in O(n+b) time.
     function diff(a,b) {
        let hash = {};
        b.forEach(el => {hash[el] = true});

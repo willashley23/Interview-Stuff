@@ -1,8 +1,8 @@
 /*jshint esversion: 6 */
 class BinaryHeap {
     
-    constructor(d) {
-        this.content = [d];
+    constructor() {
+        this.content = [];
     }
     
     add(data) {
@@ -39,7 +39,7 @@ class BinaryHeap {
 
 }
 
-let b = new BinaryHeap(120);
+let b = new BinaryHeap();
 b.add(100);
 b.add(50);
 b.add(60);

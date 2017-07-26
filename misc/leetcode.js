@@ -18,21 +18,18 @@ function dedup(arr) {
 // has a bigger idx than the value being subtracted from it.
 function diff(a) {
 
-    let max = Math.max.apply(null, a);
-    let maxIdx = a.indexOf(max);
-    /* We get the min by only searching the subarray of elements that are behind the max in the array, 
-       so if the array were [2,3,10,4,6], the max is 10, and we only care about the smallest el before it.
-       meaning we search for the min in the subarray [2,3,10];
-    */
-    let min = Math.min.apply(0, a.slice(0, maxIdx));
-
-    /* If there are still nums in the array and the max is at the first index, drop the first
-       element and try again */
-    if(a.length && !maxIdx){
-        return diff(a.slice(1));
+    let currentMax = a[1] - a[0];
+    let currentMin = a[0];
+    
+    for (let el in a) {
+        if (a[el] - currentMin > currentMax) {
+            currentMax = a[el] - currentMin;
+        }
+        else {
+            currentMin = a[el];
+        }
     }
-
-    return max - min;
+    return currentMax;
 }
 
 //diff([7, 9, 5, 6, 3, 2]) == 2
