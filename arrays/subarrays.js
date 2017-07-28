@@ -52,3 +52,115 @@ function maxSubarrayAverageWithArray(arr,k) {
 
 //maxSubarrayAverageWithArray([1,12,-5,-6,50,3], 4); // start at idx 1
 //maxSubarrayAverageWithArray([1,12,3,-5,20,2,-6,50,300,7], 4); // the last 4
+
+
+// ====================================================================================================================================
+
+// Find maximum element in each subarray of size k. 
+class Deque {
+    constructor(size)
+    {
+        this.contents = [];
+        this.size = size;
+    }
+    
+    push(el, arr) {
+        while(this.contents.length > 0 && (arr[this.contents[this.contents.length-1]] < arr[el] || this.contents[0] < el - this.size + 1)) {
+            this.contents.pop();
+            //this.contents.shift(); // cheating. This current implementation doesn't quite work. Prolly needs linked list implementation.
+        }
+        this.contents.push(el);
+    }
+    
+    max() {
+        return this.contents[0];
+    }
+    
+    min() {
+        return this.contents[this.contents.length-1];
+    }
+    
+    print()
+    {
+        console.log(this.contents);
+    }
+}
+
+var maxSlidingWindow = function(nums, k) {
+
+    if (k === 1 ) return nums;
+    if (k === 0) return [];
+    if (k === nums.length) return [Math.max.apply(null, nums)];
+    
+    let maxes = [];
+    let d = new Deque(k);
+    
+    for (let el in nums) {
+        d.push(el, nums);
+        
+        if (el >= k - 1) {
+            maxes.push(nums[d.max()]);
+        }
+    }
+    
+    return maxes;
+};
+
+// Alternate somewhat cheating solution because it uses shift().
+var maxSlidingWindow = function(nums, k) {
+    
+    if (k === 1 ) return nums;
+    if (k === 0) return [];
+    if (k === nums.length) return [Math.max.apply(null, nums)];
+    
+    let deque = [];
+    let answer = [];
+    
+    for (let i = 0; i < nums.length; i++) {
+        
+        while (deque[0] !== null && deque[0] < i - k + 1 ) {
+            deque.shift();
+        }
+
+        while(deque[deque.length - 1] && nums[deque[deque.length - 1]] < nums[i]) {
+            deque.pop();
+        }
+        
+        deque.push(i);
+        
+        if (i === k - 1 ) {
+            answer.push(Math.max.apply(null, nums.slice(0,i+1)));
+        }
+        else if(i + 1 >= k) {
+            answer.push(nums[deque[0]]);
+        }
+    }
+    
+    return answer;
+};
+
+
+//maxSlidingWindow([1,-1], 1);
+//maxSlidingWindow([1,3,1,2,0,5],3);
+
+/*
+    Explanation: Trivial to do this in O(nk) time but we can do O(n).
+    Use a deque (double ended queue). Push elements in to the deque based on the following.
+    if the element you are trying to add to the deque (current) is smaller than the head (last)
+    element in the deque, push it. If it is bigger, then continually pop items from the deque
+    until it is empty of you reach an element that is larger. Check also to make sure that the
+    head of the deque is still in range of the window and pop accordingly. The deque stores 
+    indeces of the whole array. Once you have reached i=k while walking through the array
+    you can start pushing elements into an answers array by fetching the 0th index of the deque.
+    It will always be the max.
+*/
+
+
+// ====================================================================================================================================
+
+
+// Maximum subarray. Find the sum of the largest contiguous subarray.
+
+
+
+

@@ -1,3 +1,5 @@
+/*jshint esversion: 6 */
+
 function range(n,k) {
   if (k - n === 2) {
     return [n+1];
@@ -7,6 +9,18 @@ function range(n,k) {
   return coll;
   
 }
+
+const flatten = function(arr, result = []) {
+  for (let i = 0, length = arr.length; i < length; i++) {
+    const value = arr[i];
+    if (Array.isArray(value)) {
+      flatten(value, result);
+    } else {
+      result.push(value);
+    }
+  }
+  return result;
+};
 
 // Write a recrusive function that takes an accumulator and any number of ints following
 // and return the accumulator which should be the sum of all the ints. 
