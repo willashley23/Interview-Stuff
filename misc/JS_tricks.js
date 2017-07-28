@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */
 function shit(arr) {
   let i = 0
   let groups = []
