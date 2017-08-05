@@ -1,7 +1,7 @@
 /*jshint esversion: 6 */
 
 // Return the maximum average subarray of size k. O(n);
-function maxSubarrayAverage(arr,k) {
+function maxSubarrayAverage(arr, k) {
     
     let max = 0;
     for (let i = 0; i < k; i++) {
@@ -27,7 +27,7 @@ function maxSubarrayAverage(arr,k) {
    i-k+1, and the end idx to k+1, and just return that slice. */
 
 // Same as above, but instead, return the subarray itself. O(n + k);
-function maxSubarrayAverageWithArray(arr,k) {
+function maxSubarrayAverageWithArray(arr, k) {
     
     if (k === arr.length) return arr;
 
@@ -35,7 +35,6 @@ function maxSubarrayAverageWithArray(arr,k) {
     let start, end = 0;
     for (let i = 0; i < k; i++) {
         max += arr[i];
-        values.push(arr[i]);
     }
     
     let j = 0;
@@ -160,6 +159,95 @@ var maxSlidingWindow = function(nums, k) {
 
 
 // Maximum subarray. Find the sum of the largest contiguous subarray.
+
+function maxiumumContiguousSubarray(nums) {
+    let maxEndingHere = 0,
+        maxSoFar = 0;
+
+    for (let el in nums) {
+        maxEndingHere += nums[el];
+        if (maxEndingHere < 0) {
+            maxEndingHere = 0;
+        }
+
+        if (maxEndingHere > maxSoFar) {
+            maxSoFar = maxEndingHere;
+        }
+    }
+
+    return maxSoFar;
+
+}
+
+// Same as above but returns the array itself. Keep a pointer akin to what you did in the example at the top
+// Start it at 0, and set the end to the current idx whenever the sum is greater than what we had before. 
+// If the max ever turns neg, we must move the start to idx + 1, because we know [1,2,-100] will never be a part 
+// of the max if [4,100000] follows, since it is neg. 
+function maxiumumContiguousSubarray(nums) {
+    let maxEndingHere = 0,
+        maxSoFar = 0,
+        start = 0,
+        end = 0,
+        s = 0;
+
+    for (let el in nums) {
+        
+        maxEndingHere += nums[el];
+
+        if (maxEndingHere < 0) {
+            maxEndingHere = 0;
+            s = parseInt(el) + 1;
+        }
+
+        if (maxEndingHere > maxSoFar) {
+            maxSoFar = maxEndingHere;
+            start = s;
+            end = parseInt(el);
+        }
+    }
+
+    return nums.slice(start, end + 1);
+
+}
+
+/* 
+    maxiumumContiguousSubarray([100, -4, 100, 4, -100, 6]); maxiumumContiguousSubarray([1, 40, -10000, 39, 1, 3]); maxiumumContiguousSubarray([1,2,-100,4,100000]);
+*/
+
+// ====================================================================================================================================
+
+// Longest arithmatic subsequence
+function arithmaticPairOfThree(nums) {
+    let length = nums.length;
+    
+    for (let i = 1; i < length - 1; i++) {
+        let j = i - 1,
+            k = i + 1;
+            
+        while (j >= 0 && k <= length - 1) {
+            let sum = nums[j] + nums[k];
+            if (sum === nums[i] * 2) return true;
+            sum < nums[i] * 2 ? k++ : j--;
+        }
+    }
+    
+    return false;
+}
+
+/*
+    So this one is actually really hard. The optimal DP solution is O(n^2) and involves creating either a hash table or a 2x2 matrix
+    let me explain the above though. We can find an arithmatic sequence of three by using that algorithm. Lets use [10,15,19,20]
+    as the example. Assume it will be sorted or sort it if necessary, as the final solution will be a degree higher in complexity anyway.
+    We start at the second element, and check the adjacent two elements, 10, and 19. We sum them up, and if their sum is equal to double
+    the current element (15), then viola, we have a sequence of three. If not... then we check to see whether our sum is too large or 
+    too small. If it is too large, we need to try using a smaller left hand side number, so we decrement the lhs, in this case, it 
+    would automatically end the loop. In the other case, we increase k, so i = 0, k = 3, and we try again, and this time, we see
+    a sequence. We repeat this process for every element, so next iteration, we would have taken 19 as the center. 
+*/
+
+// ====================================================================================================================================
+
+// Longest increasing subsequence
 
 
 
