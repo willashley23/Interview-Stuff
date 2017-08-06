@@ -4,7 +4,7 @@
 let rand = arr[Math.floor(Math.random() * arr.length)];
 
 // Array flatten
-[].concat.apply([], news);
+[].concat.apply([], arr);
 
 // Array/Set Difference (eg: [1,2,3] - [1,2] = [3])
 function diff(a,b) {
@@ -49,3 +49,6 @@ var charArray = {};
 for (var i = 0; i<26; i++) {
     charArray[String.fromCharCode(a + i)] = String.fromCharCode(a + i);
 }
+
+// Create array of ints from 0..n 
+Array.apply(null, {length: n}).map(Number.call, Number);

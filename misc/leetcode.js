@@ -13,6 +13,17 @@ function dedup(arr) {
     return Object.keys(hash);
     
 }
+// Dedup in O(n) time and O(1) space
+function d(arr) {
+    for (let el in arr) {
+        if (arr[Math.abs(arr[el])] >= 0) {
+            arr[Math.abs(arr[el])] = -arr[Math.abs(arr[el])];
+        }
+        else {
+            console.log(Math.abs(arr[el]));
+        }
+    }
+}
 
 // That really contrived difference problem where you need the max diff between two elements ONLY when the first value
 // has a bigger idx than the value being subtracted from it.
@@ -34,6 +45,8 @@ function diff(a) {
 
 //diff([7, 9, 5, 6, 3, 2]) == 2
 //diff([666, 555, 444 , 33, 22, 23]) == 1
+//cma -110
+//cmn 666
 
 function isValid(s) {
     

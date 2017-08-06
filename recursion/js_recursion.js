@@ -89,7 +89,7 @@ function fibs(n) {
 function nPrimes(n) {
     let primes = [];
     for(let i = 3; primes.length < n-1; i += 2) {
-        if (primes.every(prime => {return i % prime !== 0})) {
+        if (primes.every( (prime) => {return (i % prime !== 0);})) {
             primes.push(i);
         }
     }

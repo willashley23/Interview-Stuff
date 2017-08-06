@@ -166,7 +166,6 @@ function shuffle(array) {
   return array;
 }
 
-
 // Reverse Doubly Linked List
 
 function reverseDoublyLL(dll){
@@ -185,7 +184,11 @@ function reverseDoublyLL(dll){
    }
   return dll;
 }
-   
+   // 1-><-4-><-5-><-3->null/
+   /*
+        tmp = 5
+        4<-1->null
+   */
 // Delete Kth node from end
 
 
