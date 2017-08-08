@@ -640,7 +640,7 @@ class BinarySearchTree {
                 }
             }
             if (temp.right) {
-                if (!temp.right.marked) {
+                if (!temp.right.marked && temp.right.left) {
                     temp.right.marked = true;
                     temp.right.rightNode = true;
                     queue.unshift(temp.right);

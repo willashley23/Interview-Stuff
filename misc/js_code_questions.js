@@ -98,17 +98,17 @@ function parenthesesAreBalanced(str) {
 }
 
 // Stock picker in O(n) time and O(1) space.
-function getMaxProfit(stockPricesYesterday) {
+function getMaxProfit(prices) {
   
-    if (stockPricesYesterday.length < 2) {
+    if (prices.length < 2) {
         return 0;
     }
     
-    let minPrice = stockPricesYesterday[0];
-    let maxProfit = stockPricesYesterday[1] - stockPricesYesterday[0];
+    let minPrice = prices[0];
+    let maxProfit = prices[1] - prices[0];
 
-    for (let i = 1; i < stockPricesYesterday.length; i++) {
-        let currentPrice = stockPricesYesterday[i];
+    for (let i = 1; i < prices.length; i++) {
+        let currentPrice = prices[i];
         let potentialProfit = currentPrice - minPrice;
         maxProfit = Math.max(maxProfit, potentialProfit);
         minPrice = Math.min(minPrice, currentPrice);

@@ -248,6 +248,8 @@ function arithmaticPairOfThree(nums) {
 // ====================================================================================================================================
 
 // Longest increasing subsequence
+// Longest common subsequence not contiguous
+// Longest common subsequence contiguous (like longest common substring between 2 str. uses matrix)
 
 
 

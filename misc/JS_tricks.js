@@ -31,6 +31,10 @@ arr.every( (el) => {
 // Array max
 Math.max.apply(null, [-5, -1, -8]);
 
+// Max by
+var m = [{foo: "d",bar:1},{foo: "d",bar:5},{foo: "d",bar:10},{foo: "d",bar:-5}];
+Math.max.apply(null, m.map(el => {return el.bar}));
+
 // string.include?
 str.indexOf('lo');
 
