@@ -63,7 +63,7 @@ What is going on here? It turns out that JavaScript treats variables which will 
 * If no name is needed because the function is only ever called in one place, then why add a name to whatever namespace you're in.
 * The code seems more self-contained and readable when handlers are defined right inside the code that's calling them. You can read the code in almost sequential fashion rather than having to go find the function with that name.
 
-Good explanation of anon functions and function declaration vs function operator: http://helephant.com/2008/08/23/javascript-anonymous-functions/
+[Good explanation of anon functions and function declaration vs function operator](http://helephant.com/2008/08/23/javascript-anonymous-functions/)
 
 
 ## AMD vs. CommonJS (Dependency Injection)
@@ -101,8 +101,29 @@ This whole process is called an *HTTP Transaction*. A key point about these tran
 * Cookies are expensive to constantly send back and forth, especially on **mobile web**. Consider using `localStorage` instead.
 
 ### HTTPS
+First, let's state the problem. When you make a request to a site, your request passes through many different networks, through routers, network switches, each of which could be tampered with or eavesdropped: they can see what's going through the wire. In traditional HTTP reqests, requests are sent as plain text. Not good if you're sending passwords.
 
-### HTTP2
+#### TLS
+Transport Layer Security, the successor to Secure Socket Layer (SSL) is a protocol used to implement HTTPS. It secures the connection with:
+
+**public key encryption:** each party has a privte and public key. The public key encrypts the the plain text request and the private key decrypts it.
+
+#### HTTP/2
+HTTP 2.0 is a binary protocol that multiplexes numerous streams going over a single (normally TLS-encrypted) TCP connection.
+
+The contents of each stream are HTTP 1.1 requests and responses, just encoded and packed up differently. HTTP2 adds a number of features to manage the streams, but leaves old semantics untouched.
+
+A stream is an independent, bi-directional sequence of frames exchanged between the client and server within an http2 connection.
+
+A single http2 connection can contain multiple concurrently-open streams, with either endpoint interleaving frames from multiple streams. Streams can be established and used unilaterally or shared by either the client or server and they can be closed by either endpoint. The order in which frames are sent within a stream is significant. Recipients process frames in the order they are received.
+
+Multiplexing the streams means that packages from many streams are mixed over the same connection. Two (or more) individual trains of data are made into a single one and then split up again on the other side. 
+
+In summary: 
+
+* Supports multiplexing queries
+* Header compression
+* Reduced latency and download times
 
 ### Ajax
 Simply put, AJAX is the use of JavaScript to send and receive using HTTP without reloading the page. AJAX is an acronym for asynchronous JavaScript and XML, and is used as a technique for creating client-side asynchronous web applications. AJAX is considered a group of technologies. HTML and CSS can be used in combination to mark up and style information. JavaScript and the XMLHttpRequest object provide the method for exchanging data asynchronously between the browser and the server.
@@ -130,6 +151,7 @@ A JSONP response contains a callback function usually written in JavaScript, and
 ## Web sockets
 
 Web sockets use a TCP based protocol (ws://)
+[sockety!!!](https://github.com/willashley23/TechnicalConceptsForInterviews/blob/master/WebSocket.md)
 
 ## document.load vs document.ready
 
@@ -197,6 +219,15 @@ typeof undefined is undefined. typeof null is object (but null is not really an 
 
 common trick, why should you check for null with === and not == because == null will return true if the value is undefined. 
 https://stackoverflow.com/questions/9032856/what-is-the-explanation-for-these-bizarre-javascript-behaviours-mentioned-in-the/9033306#9033306
+
+## Addition
+This is super granular and anyone who asks you this in an interview is probably out of their mind but anyway:
+
+`{} + [] // 0`: left hand gets parsed as an empty block, leaving the right hand which considering we are doing addition, tries to convert the array into a primitive, so 0.
+
+`({} + []) // [object Object]`: The parenthesis change the object from being parsed as an empty block to being parsed as an empty object, so it tries to convert it to a primitive, in this case, `object Object`, the string representation of an object. Then it basically tries to perform string concatination with the remaining operand, so it must call `toString(toPrimitive([]))` on the array, which is an empty string.
+
+`[] + {} // [object Object]`: JS calls `toPrimitive` on the first array, which calls `valueOf` on the array. If that does not return a primitive, it then tries to convert it to a string. [More on this in 1.1](http://2ality.com/2012/01/object-plus-object.html)
 
 
 ##Explain Function.prototype.bind 
@@ -270,7 +301,7 @@ How do you inject code into the foreign page? inject the script tag?
 
 #### XSS Defense
 
-
+[page 7](https://web.stanford.edu/~ouster/cgi-bin/cs142-winter14/downloads/Final%20(Fall%202010)%20Solution.pdf)
 ## iframes
 
 What is an iframe. What considerations do you need to make when making a plugin that another site will use. Consider JS and CSS. How will you contain it to make sure it doesnt mess up the user's site?
@@ -289,18 +320,82 @@ How does the JS in an iframe communicate with BOTH the iframe's server AND the c
 how does it work? what is it? What does it have to do with `arguments`? How can we simulate this with vanilla JS?
 
 ## Arguments
-What is it? Is it an array, or an array like object. If I have `foo(a,b)` will `arguments` equal `[a,b,...rest]` or just `[...rest]`?
+`arguments` is an array-like object. Notice how it includes all arguments including the extra ones? You can simply key into them via indeces.
+
+```
+function foo (a,b) {
+	console.log(arguments)
+}
+
+foo("this","is","an","argument")
+// { '0': 'this', '1': 'is', '2': 'an', '3': 'argument' }
+```
 
 ## What else can you specify on a `<script>` tag?
 
 besides `type` and `src` and how does it help us with downloading the script...or iframes or some shit.
 
+`async`: A boolean attribute indicating that the browser should, if possible, execute the script asynchronously.
+
+`crossorigin`: Normal script elements pass minimal information to the window.onerror for scripts which do not pass the standard CORS checks. To allow error logging for sites which use a separate domain for static media, use this attribute.
+
+`defer`: This Boolean attribute is set to indicate to a browser that the script is meant to be executed after the document has been parsed, but before firing `DOMContentLoaded`. 
+
+`integrity`: Contains inline metadata that a user agent can use to verify that a fetched resource has been delivered free of unexpected manipulation.
+
+Also, look up dynamic script tags!
+
 ## Can you reassign an const declared object's properties?
+
+```
+const foo = {
+	bar: "I'm just me!"
+}
+
+foo.bar = "not anymore!"
+console.log(foo.bar) // not anymore!
+```
+Yes, you can. What you *cannot* do is reassign foo to another value entirly. `const` protects the reference to the location in memory. Changing that memory address is illegal, but changing properties of what rests in that memory address is fine.
+
 Follow up: how could we make it so the props were read only? Proxies...and what else?
 
-## What is ES6 `async`?
-what does it do, what problem does it solve, what did people do before it?
+`Object.freeze` will prevent writing, deleting, and adding to an object's props.
+
+```
+const foo = Object.freeze( {
+	bar: "neva gonna change"
+});
+
+foo.bar = "plz";
+console.log(foo.bar) // neva gonna change
+
+```
+
+There is also `Object.defineProperty` which lets you pass in an object of params such as `writable: false`
 
 
-## Promises
-because FML
+## Promises and ES7 `async`
+
+`In the beginning` there was callback hell. The callback christmas tree. You know the horror. At each callback, you had to either specify an error function or use an if block to catch the error before starting the next callback. 
+
+`Promises` came a long as a way to try and clean that up. Promises represent a value that will eventually be something. Instead of passing a callback, you just call `.then( (params) => {dosomething(params)})` and at the end you call `.catch( e => {console.error(e)})`. It gave us a nice linear progression that was much more readable. `async` does this even better.
+
+`async function foo()` is the declaration syntax. When an async function is called, it returns a Promise. When the async function returns a value, the Promise will be resolved with the returned value.  When the async function throws an exception or some value, the Promise will be rejected with the thrown value. 
+
+An async function can contain an `await` expression, that pauses the execution of the async function and waits for the passed Promise's resolution, and then resumes the async function's execution and returns the resolved value. It takes a promise, waits for it to return a value, then returns that value. 
+`var user = await User.get(request.user);`
+
+This code returns a promise:
+
+`require("popsicle").get("http://www.google.com");`
+
+This code returns the value of that promise once it is ready:
+
+`await require("popsicle").get("http://www.google.com");`
+
+
+But JavaScript's model hasn't changed, it's still single threaded. The code is only interrupted by your explicit command to "await". You can still mess up by sharing state, but that's nothing new. Follow up: go in detail about JavaScript threading, what it means, concurrency, etc.
+
+`await` gives you explicit control over concurrency. You can combine this with powerful promise utilities like Promise.all, which will wait for every promise to finish and then finish itself, to write powerful and yet easy to understand asynchronous code.
+
+[Source](http://rossboucher.com/await/#/)
