@@ -1,5 +1,5 @@
 # JavaScript
-A list of key JS questions you must know the answer to for interviewing.
+This is a compilation of JS questions I have encountered in interviews or found online. It also contains general web knowledge, and stuff that is tangentially related to JS.
 
 ## Event Delegation/Bubbling
 When an event is fired from an element, the event will be bubbled up to its parent nodes. However, the original element where the event occurs, called 'target', stays the same in the event object. Using the target property, we can always keep tracking which element actually causes an event captured by its parent, and it can help use reduce the number of event handlers as we sometimes don't need to add event listeners for every element.
@@ -14,7 +14,7 @@ Objects are just collections of properties. objects inherit the properties of th
 
 Can add properties to prototype and any instances of object created with new constructor will immediately have them.
 
-### `.prototype` vs `.__proto__`
+#### `.prototype` vs `.__proto__`
 `__proto__` is the actual object that is used in the lookup chain to resolve methods, etc. prototypeis the object that is used to build `__proto__` when you create an object with new. `prototype` store the `__proto__`
 
 ## Scope
@@ -24,12 +24,17 @@ JavaScript has **lexical scope** aka **static scoping** and **function scoping**
 ```
 function foo() {
 	if (true) {
-	   let a = 3; 
+	  
 	   // this is scoped strictly to the if block
+	   let a = 3;
+	   
+	   // This is scoped to the function foo;
+	   var b = 4;
 	}
 	
 	if (true) {
 		console.log(a) // throws error.
+		console.log(b) // 4.
 	} 
 
 }
@@ -49,8 +54,8 @@ What is going on here? It turns out that JavaScript treats variables which will 
 * Arrow functions are always anonomous. 
 * They cannot recieve `arguments`.
 * They cannot be constructors.
-*  They do not introduce a new scope, so `this` will retain the context of the enclosing function.
-*   You only need parenthesis for the params if you are using more than one parameter.
+* They do not introduce a new scope, so `this` will retain the context of the enclosing function.
+* You only need parenthesis for the params if you are using more than one parameter.
 
 *Refer to the App Academy curriculum on arrow functions for explanation of these.*
 
@@ -86,6 +91,19 @@ Call takes in arguments separated by commas, Apply takes arguments as an array.
 
 ## HTTP
 
+### Explain HTTP
+HTTP is a protocol used to facilitate request-response transactions between clients and servers. The client send the HTTP request over the wire, containing headers (optional bits of info like access tokens, CORS shit), an HTTP verb (such as GET, implied by the url), and optional body. 
+
+The server uses a regex to parse the request url, and then sends it to the application layer to look up the requested resource, which may involve the application layer connecting to a db. It then sends the request back over the wire, with the status code in the header, which is one of the first things the browser checks. 
+
+This whole process is called an *HTTP Transaction*. A key point about these transactions is that they are *stateless*. Once the connection is closed, the server has no state or memory of that connection. You cannot request `/img/23` and then request `/img/next` because the server has no idea you were on 23, unless you specify that in the body.
+
+* Cookies are expensive to constantly send back and forth, especially on **mobile web**. Consider using `localStorage` instead.
+
+### HTTPS
+
+### HTTP2
+
 ### Ajax
 Simply put, AJAX is the use of JavaScript to send and receive using HTTP without reloading the page. AJAX is an acronym for asynchronous JavaScript and XML, and is used as a technique for creating client-side asynchronous web applications. AJAX is considered a group of technologies. HTML and CSS can be used in combination to mark up and style information. JavaScript and the XMLHttpRequest object provide the method for exchanging data asynchronously between the browser and the server.
 What is AJAX used for, and what companies use it?
@@ -105,11 +123,13 @@ The AJAX call fires. This creates and AJAX request, browsers use the XMLHttpRequ
 5. Once the data is received, a second JavaScript callback function, is called this function captures the data, and updates the web page accordingly.
 Newer technologies have slowly been replacing the XML in AJAX with JSON. The reason being, XML is a lot stricter than HTML, thus having larger file sizes, and harder to extract the data that is returned. JSON is less verbose, has proven to be more efficient, and working with data is much easier.
 
-
 ### Explain how JSONP works (and how it's not really AJAX).
 
 A JSONP response contains a callback function usually written in JavaScript, and when the response is flushed, the callback will be launched. It's more like script tag injection, rather than AJAX. JSONP is just a way of getting around the same origin policy. you create a script tag and set its src to the url you want to GET.
 
+## Web sockets
+
+Web sockets use a TCP based protocol (ws://)
 
 ## document.load vs document.ready
 
@@ -198,6 +218,13 @@ all except object is immutable (can't change)
 * Set the EXPIRES header for purely static pages, set the date far in the future, so that when an asset is downloaded once, it is cached by the browser and never requested again. In **apache it’s ExpiresActive ON**
 * Serve Gzipped content.
 
+Is S3 really a CDN? What are some common problems ppl run into with CDNs. What should you CDN? Big images, small images? Should you CDN your .html files? 
+
+## Webpack, bundling, and tree shaking
+Webpack:  a module bundler. Create a single bundle.js. Make only one `script` tag request in the html. But this doesnt work for big apps. Solution? 
+
+### Tree shaking
+What is it? How does webpack help?
 
 ##Web APIs you have used 
 (window.history.push)
@@ -235,3 +262,45 @@ function decode(str)
 
 }
 ```
+
+## Security
+
+### XSS
+How do you inject code into the foreign page? inject the script tag?
+
+#### XSS Defense
+
+
+## iframes
+
+What is an iframe. What considerations do you need to make when making a plugin that another site will use. Consider JS and CSS. How will you contain it to make sure it doesnt mess up the user's site?
+
+How does the JS in an iframe communicate with BOTH the iframe's server AND the current user's server? Like how does it surface information to both?
+
+## ES6 Features
+* Arrow functions
+* `let` `const`
+* `import`/`export`
+* class syntax and inheritance
+* `Symbol` type
+* misc: `Array.from()`
+
+## Angular function black magic 
+how does it work? what is it? What does it have to do with `arguments`? How can we simulate this with vanilla JS?
+
+## Arguments
+What is it? Is it an array, or an array like object. If I have `foo(a,b)` will `arguments` equal `[a,b,...rest]` or just `[...rest]`?
+
+## What else can you specify on a `<script>` tag?
+
+besides `type` and `src` and how does it help us with downloading the script...or iframes or some shit.
+
+## Can you reassign an const declared object's properties?
+Follow up: how could we make it so the props were read only? Proxies...and what else?
+
+## What is ES6 `async`?
+what does it do, what problem does it solve, what did people do before it?
+
+
+## Promises
+because FML
