@@ -1,6 +1,26 @@
 # JavaScript
 This is a compilation of JS questions I have encountered in interviews or found online. It also contains general web knowledge, and stuff that is tangentially related to JS.
 
+To add or update:
+
+ - [ ] Security
+ - [ ] Event loop
+ - [ ] Redo Ajax
+ - [ ] Websockets
+ - [ ] Tree shaking
+ - [ ] iFrames
+ - [ ] black magic
+ - [ ] dynamic script tags
+
+ [Coding Interview University](https://github.com/jwasham/coding-interview-university#prerequisite-knowledge)
+ [ES6 -> ES5](https://github.com/addyosmani/es6-equivalents-in-es5)
+ [JS Algorithms Questions and Answers](https://github.com/kennymkchan/interview-questions-in-javascript)
+ [Build a web crawler](https://github.com/scottduane/HustleWebCrawler)
+ [App Academy Interview Questions Compilation](https://docs.google.com/spreadsheets/d/1xoPvrAlHzlU8ypd5MhqSZ7-ZKybzYRq8mIypWgmcWiU/edit#gid=0)
+ [Big 10 Interview Questions](https://docs.google.com/document/d/1zDaZP0lVIU3Ystk64B-ynEGxWAe9J7k9tn2RgSZ7mhM/edit)
+ [Best Practices for Speeding Up Your Web Site](https://developer.yahoo.com/performance/rules.html)
+ 
+
 ## Event Delegation/Bubbling
 When an event is fired from an element, the event will be bubbled up to its parent nodes. However, the original element where the event occurs, called 'target', stays the same in the event object. Using the target property, we can always keep tracking which element actually causes an event captured by its parent, and it can help use reduce the number of event handlers as we sometimes don't need to add event listeners for every element.
 
@@ -249,7 +269,13 @@ all except object is immutable (can't change)
 * Set the EXPIRES header for purely static pages, set the date far in the future, so that when an asset is downloaded once, it is cached by the browser and never requested again. In **apache it’s ExpiresActive ON**
 * Serve Gzipped content.
 
-Is S3 really a CDN? What are some common problems ppl run into with CDNs. What should you CDN? Big images, small images? Should you CDN your .html files? 
+S3 is *not* a CDN. Amazon CloudFront is. Store images, css, javascripts on it. Do not store HTML on it.
+
+Amazon S3 is designed for large-capacity, low-cost file storage in one specific geographical region.* The storage and bandwidth costs are quite low.
+
+Amazon CloudFront is a Content Delivery Network (CDN) which proxies and caches web data at edge locations as close to users as possible.
+
+Disadvantages: high cost
 
 ## Webpack, bundling, and tree shaking
 Webpack:  a module bundler. Create a single bundle.js. Make only one `script` tag request in the html. But this doesnt work for big apps. Solution? 
@@ -359,7 +385,7 @@ Yes, you can. What you *cannot* do is reassign foo to another value entirly. `co
 
 Follow up: how could we make it so the props were read only? Proxies...and what else?
 
-`Object.freeze` will prevent writing, deleting, and adding to an object's props.
+`Object.freeze` will prevent writing, deleting, and adding to an object's props. However, it is **not a deep freeze**, so it will not freeze nested objects.
 
 ```
 const foo = Object.freeze( {
